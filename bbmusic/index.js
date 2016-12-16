@@ -1,6 +1,6 @@
+var express = require('express');
 var cookiePaser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var express = require('express');
 var path = require('path');
 var mongoose = require('mongoose');
 var expressValidator = require('express-validator');
@@ -32,9 +32,10 @@ var app = express();
 app.set('port', (process.env.PORT || 5000));
 
 // view engine setup
-app.engine('ejs', engine);
-app.set('views', path.join(__dirname, '/views'));
+app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
+console.log("here");
+console.log('__dirname + '/views');
 
 
 
