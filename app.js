@@ -31,6 +31,7 @@ var app = express();
 
 // view engine setup
 app.engine('ejs', engine);
+app.set('port', (process.env.PORT || 5000));
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
@@ -102,5 +103,6 @@ app.use('/file',fileUploadController);
 app.use('/songs',songController);
 app.use('/ajax',ajaxController);
 app.use('/admin',adminController);
-app.listen(8080);
-console.log('8080 is the magic port');
+app.listen(app.get('port'), function() {
+  console.log('Node app is running on port', app.get('port'));
+});
