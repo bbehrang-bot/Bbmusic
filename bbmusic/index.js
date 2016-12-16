@@ -25,7 +25,7 @@ var fileUploadController = require('./routes/fileUploadController.js');
 var checkoutController = require('./routes/checkoutController.js');
 
 
-mongoose.connect('mongodb://heroku_r92vh9sw:nhtf7uq729n9iqqbe78kgeuool@ds015995.mlab.com:15995/heroku_r92vh9sw');
+mongoose.connect('mongodb://heroku_nkzxmzrc:m9n0gdrupdph9gcg08kimb75ul@ds013216.mlab.com:13216/heroku_nkzxmzrc');
 var db = mongoose.connection;
 var app = express();
 
