@@ -1,8 +1,0 @@
-# depslib dependency file v1.0
-1463759373 source:c:\users\bbehrang\music\lab2\queue\main.c
-	<stdio.h>
-	<stdlib.h>
-	"queue.h"
-
-1463744316 c:\users\bbehrang\music\lab2\queue\queue.h
-
