@@ -1,0 +1,186 @@
+
+
+<script src="/media/js/valid.js" type="text/javascript"></script>
+
+  <% layout('layout/layout') -%>
+  <div class="bodyBackground">
+
+  </div>
+    <section class="bodyContent">
+      <div class="songOps">
+        <a href="#">s</a>
+      </div>
+      <!-- -->
+      <form id="AlbumEditForm" method="post" action="/albums/edit"  class="forms" data-parsley-validate="">
+        <div class="form-group">
+          <label class="loginLabels" for="name">Artist name :</label>
+          <input id="artistListInput" type="text" class="artistName form-control" name="name" placeholder="Enter artist's name..." required="">
+          <div id="artistSelectionForm">
+            <div class="artistAjax"></div>
+          </div>
+        </div>
+        <div class="form-group">
+          <div id="albumSelectionForm">
+            <div class="albumAjax"></div>
+          </div>
+        </div>
+        <div class="form-group">
+          <div id="songSelectionForm">
+            <div class="songAjax"></div>
+          </div>
+        </div>
+      </form>
+    </section>
+
+  <script>
+      $(document).ready(function(){
+        $(".bodyBackground").css({"background":"url('/media/img/songAdd.jpg')","background-size": "100%"});
+
+        $("#artistListInput").on("change",getArtist);
+        function getArtist()
+        {
+          var that = $(this);
+          that.off("change");
+          var val = $("#artistListInput").val().toLowerCase();
+          $.ajax({
+            url: '/albums/add/artist',
+            contentType : 'application/json',
+            method : 'post',
+            data : JSON.stringify({name:val}),
+            success:function(response)
+            {
+              var tbodyEl = $('.artistAjax');
+              tbodyEl.html('');
+              $(".artistName").siblings($(".parsley-errors-list").remove());
+              if(response.artists.length > 0)
+              {
+                for(var i=0;i<response.artists.length;i++)
+                {
+                  if(val != response.artists[i].name )
+                  {
+                    $(".artistName").after('<ul class="parsley-errors-list filled"><li class="parsley-required">Artist not found.</li></ul>');
+                    break;
+                  }
+                }
+                response.artists.forEach(function(artist){
+                tbodyEl.append('\
+                  <div class="artistRow">\
+                  <label class="artistLabel" for='+artist.name+'>'+artist.name+'</label><input artistId="'+artist.name+'"  class="artistRadioBtns" id="'+artist.name+'" type="radio" name="artistListRadio" value="'+artist.name+'">\
+                  </div>\
+                  ');
+                });
+                $(".artistAjax").show({duration:'400ms',queue:false});
+
+              }
+              else{
+                $(".artistName").after('<ul class="parsley-errors-list filled"><li class="parsley-required">Artist not found.</li></ul>');
+              }
+            }
+          }).always(function(){that.on('change',getArtist)});
+          $("#artistSelectionForm").on('click','.artistRadioBtns',function(){
+               $('.artistRadioBtns').on('change',function(){
+                 $(".artistName").siblings($(".parsley-errors-list").remove());
+                 var newClick = $("#artistSelectionForm input[name=artistListRadio]:checked").val();
+                 $("#artistListInput").val(newClick);
+                 var artist = {name:newClick};
+                 $.ajax({
+                   url:'/albums/add/submit',
+                   method:'post',
+                   contentType : 'application/json',
+                   data:JSON.stringify(artist),
+                   success : function(response)
+                   {
+                     var tbodyEl = $('.albumAjax');
+                     tbodyEl.html('');
+                     $("#albumName").siblings($(".parsley-errors-list").remove());
+                      tbodyEl.append('<label class="loginLabels selectAlbumLabel">Select Album :</label>');
+                      response.artist.albums.forEach(function(album){
+                       tbodyEl.append('\
+                         <div class="artistRow">\
+                         <label class="artistLabel" for='+album.name+'>'+album.name+'</label><input class="albumIdChecked" type="hidden" value="'+album._id+'" /><input artistId="'+album.name+'"  class="albumRadioBtns" id="'+album.name+'" type="radio" name="albumListRadio" value="'+album.name+'">\
+                         </div>\
+                         ');
+                       });
+                       $(".albumAjax").show({duration:'400ms',queue:false});
+                   },
+                 });
+               });
+            });
+          $("#albumSelectionForm").on('click','.albumRadioBtns',function(){
+                 $('.albumRadioBtns').on('change',function(){
+                   $(".artistName").siblings($(".parsley-errors-list").remove());
+                   var newClick = $("#albumSelectionForm input[name=albumListRadio]:checked").siblings(".albumIdChecked").val();
+                   $.ajax({
+                     url: '/albums/getAlbumInfo',
+                     contentType : 'application/json',
+                     method : 'post',
+                     data : JSON.stringify({id:newClick}),
+                     success:function(response){
+                       var tbodyEl = $('.songAjax');
+                       tbodyEl.html('');
+                       $("#albumName").siblings($(".parsley-errors-list").remove());
+                        tbodyEl.append('<label class="loginLabels selectAlbumLabel">Select song :</label>\
+                        <div class="songOps">\
+                        <a class="saveSong" href="#" title="save">save</a></div>\
+                        <a class="deleteSong" href="#" title="save">delete</a></div>\
+                        </div>\
+                        ');
+                        response.album.songs.forEach(function(song){
+                         tbodyEl.append('\
+                           <div class="songRow">\
+                           <div class="inputContainer"></div>\
+                           <input type="text" class="songNameInput form-control"  value="'+song.name+'"/>\
+                           <input type="text" class="songPriceInput form-control" value="'+song.price+'"/>\
+                           <input class="songIdChecked" type="hidden" value="'+song._id+'" /><input artistId="'+song.name+'"  class="songRadioBtns" id="'+song.name+'" type="radio" name="songRadioBtns" value="'+song.name+'">\
+                           </div>');
+                         });
+                         $(".albumAjax").show({duration:'400ms',queue:false});
+                           $("#songSelectionForm").on('click','.songRadioBtns,.songOps',function(){
+                             $(".songRadioBtns").on("change",function(){
+
+                             });
+                           });
+                           $(".saveSong").on("click",function(e){
+                             e.preventDefault();
+                             var songName = $("#songSelectionForm input[name=songRadioBtns]:checked").siblings(".songNameInput").val();
+                             var songPrice = $("#songSelectionForm input[name=songRadioBtns]:checked").siblings(".songPriceInput").val();
+                             var id = $("#songSelectionForm input[name=songRadioBtns]:checked").siblings(".songIdChecked").val();
+                             var song = { name:songName,price:songPrice,id:id};
+                             $.ajax({
+                               url: '/songs/save',
+                               contentType : 'application/json',
+                               method : 'post',
+                               data : JSON.stringify(song),
+                               success : function(response){
+                                 console.log(response.song);
+                                 if(response.song)
+                                 {
+                                   $("#songSelectionForm input[name=songRadioBtns]:checked").siblings(".songNameInput").val(response.song.name);
+                                   $("#songSelectionForm input[name=songRadioBtns]:checked").siblings(".songPriceInput").val(response.song.price);
+                                 }
+                               }
+                             });
+                           });
+                           $(".deleteSong").on("click",function(e){
+                             e.preventDefault();
+                             var id = $("#songSelectionForm input[name=songRadioBtns]:checked").siblings(".songIdChecked").val();
+                             var song = {id:id};
+                             $.ajax({
+                               url: '/songs/delete',
+                               contentType : 'application/json',
+                               method : 'post',
+                               data : JSON.stringify(song),
+                               success : function(response){
+                                 console.log(response);
+                                 $('.songRow input[value="'+response.id+'"]').parent(".songRow").remove();
+                               }
+                             });
+                           });
+
+                     }
+                   });
+                 });
+              });
+        }
+      });
+    </script>

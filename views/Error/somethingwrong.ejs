@@ -1,0 +1,22 @@
+
+
+<script src="/media/js/valid.js" type="text/javascript"></script>
+  <div class="bodyBackground">
+    
+  </div>
+  <% layout('layout/layout') -%>
+    <section class="indexBody bodyContent">
+      <div class='oops'>
+        <h2>Oops...Something went wrong, please contact the administrator</h2>
+        <% if(error) {  %>
+          <p>
+          <%=error%>
+          </p>
+        <%} %>
+      </div>
+    </section>
+  <script>
+      $(document).ready(function(){
+        $(".bodyBackground").css({"background":"url('/media/img/error.jpg')","background-size": "100%"});
+      });
+    </script>
