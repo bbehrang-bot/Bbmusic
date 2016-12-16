@@ -3,7 +3,7 @@ var router = express.Router();
 var path = require('path');
 router.get('/',function(req,res)
 {
-  res.render('home/index');
+  res.render('index');
 });
 router.post('/fromLanding',function(req,res)
 {
