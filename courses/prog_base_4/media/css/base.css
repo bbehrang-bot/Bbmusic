@@ -74,19 +74,31 @@ float: left;
 #menu_bar3{
   top:16px;
 }
+.basket-content{
+  width: 100%;
+  height: 280px;
+  top: 40px;
+  /* right: 12%; */
+  position: absolute;
+  background: rgba(255,255,255,0.6);
+  transition: all 400ms;
+  opacity: 0;
+  display: block;
+}
 .navRight{
-  width: 39%;
-  height: 250px;
-  overflow: hidden;
-  float: right;
-  position: fixed;
-  z-index: 98;
-  right: 0;
-  display: none;
+      width: 39%;
+      height: 320px;
+      /* overflow: hidden; */
+      float: right;
+      position: fixed;
+      z-index: 98;
+      right: 0;
+      display: none;
+
 }
 .polygon_nowPLaying{
     width: 12%;
-    height: 25%;
+    height: 68px;
     margin-top: 40px;
     float: right;
     transition: all 400ms;
@@ -174,20 +186,27 @@ nav{
   transition: all 300ms;
 }
 .music_player_closed{
-  position: absolute;
-   right: 8%;
-   top: 10%;
-   width: 50px;
-   height: 50px;
+  float: right;
+  width: 65px;
+  text-align: center;
+  height: 65px;
+  background: rgba(255,255,255,0.5);
+  /* margin-top: 4%; */
+  position: fixed;
+  top: 41px;
+  right: 0;
+  z-index: 99;
 }
 .music_player_closed span{
   display: block;
   float: right;
-  width: 19%;
-  font-size: 3em;
+  width: 100%;
+  font-size: 3.6em;
   cursor: pointer;
   transition: all 300ms;
-  position: absolute;
+  /* position: absolute; */
+  text-align: center;
+  line-height: 62px;
 }
 .music_player_closed span:hover{
   color:#fff;
@@ -389,4 +408,95 @@ transition: all 300ms;
   -webkit-animation: uil-ring-anim 2s linear infinite;
   -o-animation: uil-ring-anim 2s linear infinite;
   animation: uil-ring-anim 2s linear infinite;
+}
+.contentInner{
+  height: 90%;
+    width: 83%;
+    /* margin: auto; */
+    float: left;
+    margin: 2% 0% 0 5%;
+    font-family: 'dense';
+    font-size: 1.6em;
+    position: relative;
+}
+.price{
+  width: 12%;
+    float: left;
+    height: 100%;
+}
+.basket_item_delete {
+  width: 12%;
+      float: left;
+      height: 100%;
+      line-height: 45px;
+      font-size: 0.8em;
+      opacity: 0;
+      transition: all 400ms;
+
+  }
+  .basket_item_delete:hover{
+    color: white;
+    cursor: pointer;
+  }
+.basket_item_name{
+  width: 70%;
+  float: left;
+  height: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.basket_items{
+  width: 92%;
+      height: 45px;
+      line-height: 45px;
+      padding: 1.2%;
+      transition: all 400ms;
+
+}
+.basket_total{
+  float: right;
+    width: 65px;
+    text-align: center;
+    height: 65px;
+    background: rgba(255,255,255,0.5);
+    /* margin-top: 4%; */
+    position: fixed;
+    top: 111px;
+    right: 0;
+    z-index: 99;
+    line-height: 65px;
+    overflow: hidden;
+    font-size: 1.4em;
+}
+.basket_checkOut{
+  float: right;
+    width: 65px;
+    text-align: center;
+    height: 65px;
+    background: rgba(255,255,255,0.5);
+    /* margin-top: 4%; */
+    position: fixed;
+    top: 181px;
+    right: 0;
+    z-index: 99;
+    line-height: 65px;
+    overflow: hidden;
+}
+.basket_checkOut a{
+  display: block;
+  width: 100%;
+  height: 100%;
+  line-height: 65px;
+  color: white;
+  display: block;
+    width: 100%;
+    height: 100%;
+    line-height: 65px;
+    color: black;
+    font-size: 2em;
+    transition: all 400ms;
+}
+.basket_checkOut a:hover{
+  color: white;
 }
