@@ -32,10 +32,8 @@ var app = express();
 app.set('port', (process.env.PORT || 5000));
 
 // view engine setup
-app.set('views', __dirname + '/views');
+app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
-console.log("here");
-console.log(__dirname + '/views');
 
 
 
