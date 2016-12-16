@@ -74,7 +74,7 @@ router.get('/api',function(req,res){
 });
 router.get('/songSubmit',ensureAuthenticated,function(req,res)
 {
-    res.render('songSubmit');
+    res.render('songsubmit');
 });
 router.get('/api/:id',function(req,res)
 {
@@ -161,7 +161,7 @@ router.delete('/api/:id',function(req,res)
   });
 });
 router.get('/edit',function(req,res){
-  res.render('Song/Edit');
+  res.render('song/edit');
 });
 router.post('/save',function(req,res){
   console.log('s');
@@ -172,13 +172,13 @@ router.post('/save',function(req,res){
   Song.updateSong(req.body.id,song,function(err,songSave){
     if(err)
     {
-      res.render('Error/somethingwrong',{error:err});
+      res.render('error/somethingwrong',{error:err});
     }
     else{
       Song.getSongById(req.body.id,function(err,newSong){
         if(err)
         {
-          res.render('Error/somethingwrong',{error:err});
+          res.render('error/somethingwrong',{error:err});
         }
         else{
           res.send({song:newSong});
@@ -192,7 +192,7 @@ router.post('/delete',function(req,res){
   Song.deleteSong(req.body.id,function(err,callback){
     if(err)
     {
-      res.render('Error/somethingwrong',{error:err});
+      res.render('error/somethingwrong',{error:err});
     }
     else{
       res.send({id:req.body.id});

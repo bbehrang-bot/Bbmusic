@@ -8,7 +8,7 @@ var User = require('../models/user');
 
 router.get('/register',function(req,res)
 {
-  res.render('Admin/register');
+  res.render('admin/register');
 });
 router.post('/register',function(req,res)
 {
@@ -25,7 +25,7 @@ router.post('/register',function(req,res)
   req.checkBody('password2','Passwords do not match').notEmpty();
   var errors = req.validationErrors();
   if(errors)
-    res.render('Admin/register',{errors : errors});
+    res.render('admin/register',{errors : errors});
   else{
   User.getUserByUsernameOrEmail(username,email,function(err,userDb){
     if(err)

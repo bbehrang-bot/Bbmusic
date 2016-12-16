@@ -10,12 +10,12 @@ router.post('/fromLanding',function(req,res)
   var lastPriority = req.body.priority;
   if(typeof(lastPriority) == 'undefined')
   {
-    res.render('Error/somethingwrong',{error:"Wrong input"});
+    res.render('error/somethingwrong',{error:"Wrong input"});
   }
   Artist.getArtistsByPriority(lastPriority,3,function(err,artists){
     if(err)
     {
-    res.render('Error/somethingwrong',{error:err});
+    res.render('error/somethingwrong',{error:err});
     }
     else
     {
@@ -29,7 +29,7 @@ router.post('/',function(req,res){
   Artist.getArtistLastPriority(function(err,artist){
     if(err)
     {
-        res.render('Error/somethingwrong',{error:err});
+        res.render('error/somethingwrong',{error:err});
     }
     else
     {
@@ -43,7 +43,7 @@ router.post('/',function(req,res){
       Artist.getArtistsByPriority(priority,3,function(err,artists){
         if(err)
         {
-          res.render('Error/somethingwrong',{error:err});
+          res.render('error/somethingwrong',{error:err});
         }
         else{
             res.send({artists:artists});

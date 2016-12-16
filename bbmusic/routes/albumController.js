@@ -36,13 +36,13 @@ router.get('/',function(req,res)
 });
 router.get('/add',function(req,res)
 {
-  res.render("Album/Add/AlbumAdd");
+  res.render("album/add/albumadd");
 });
 router.post('/add/submit',function(req,res){
   Artist.getArtistsFullInfoByName(req.body.name,function(err,artist){
     if(err)
     {
-      res.render('Error/somethingwrong',{error:err});
+      res.render('error/somethingwrong',{error:err});
     }
     else
     {
@@ -51,13 +51,13 @@ router.post('/add/submit',function(req,res){
   });
 });
 router.get('/edit',function(req,res){
-  res.render('Album/Edit');
+  res.render('album/adit');
 });
 router.post('/edit',function(req,res){
   Album.getAlbumById(req.body.id,function(err,album){
     if(err)
     {
-      res.render('Error/somethingwrong',{error:err});
+      res.render('error/somethingwrong',{error:err});
     }
     else
     {
@@ -69,7 +69,7 @@ router.post('/edit',function(req,res){
       Album.updateAlbum(album._id,album,function(err,editedAlbum){
         if(err)
         {
-          res.render('Error/somethingwrong',{error:err});
+          res.render('error/somethingwrong',{error:err});
         }
         else{
             res.send({album:editedAlbum});
@@ -97,7 +97,7 @@ router.post('/add',function(req,res){
   upload(req,res,function(err)
   {
     if(err)
-      res.render('Error/somethingwrong',{error:err});
+      res.render('error/somethingwrong',{error:err});
       else{
         var album = new AlbumModel({
           name : req.body.albumName.toLowerCase(),
@@ -109,7 +109,7 @@ router.post('/add',function(req,res){
         Album.addAlbum(album,function(err,created){
           if(err)
           {
-            res.render('Error/somethingwrong',{error:err});
+            res.render('error/somethingwrong',{error:err});
           }
           else{
             for(var i=0;i<req.files['songs'].length;i++)
@@ -124,20 +124,20 @@ router.post('/add',function(req,res){
               Song.addSong(song,function(err,callback){
                 if(err)
                 {
-                  res.render('Error/somethingwrong',{error:err});
+                  res.render('error/somethingwrong',{error:err});
                 }
               });
             }
             Album.updateAlbum(created._id,album,function(err,albumAdded){
               if(err)
               {
-                res.render('Error/somethingwrong',{error:err});
+                res.render('error/somethingwrong',{error:err});
               }
               else{
                 Artist.updateArtistByName(req.body.name,album,function(err,artistAdded){
                   if(err)
                   {
-                    res.render('Error/somethingwrong',{error:err});
+                    res.render('error/somethingwrong',{error:err});
                   }
                   else{
                     res.redirect('/artists/'+req.body.name.toLowerCase());
@@ -160,7 +160,7 @@ router.post('/add/newAlbum',function(req,res){
   Album.addAlbum(album,function(err,created){
     if(err)
     {
-      res.render('Error/somethingwrong',{error:err});
+      res.render('error/somethingwrong',{error:err});
     }
     else{
       res.send({album:created});
@@ -185,7 +185,7 @@ router.post('/getAlbum',function(req,res){
   Album.getAlbumById(req.body.name,function(err,album){
     if(err)
     {
-      res.render('Error/somethingwrong',{error:err});
+      res.render('error/somethingwrong',{error:err});
     }
     else{
       res.send({album:album});
@@ -210,13 +210,13 @@ router.post('/edit/addImages',function(req,res){
   upload(req,res,function(err)
   {
     if(err)
-      res.render('Error/somethingwrong',{error:err});
+      res.render('error/somethingwrong',{error:err});
       else{
         Album.getAlbumById(req.body.id,function(err,created)
         {
           if(err)
           {
-            res.render('Error/somethingwrong',{error:err});
+            res.render('error/somethingwrong',{error:err});
           }
           else
           {
@@ -241,20 +241,20 @@ router.post('/edit/addImages',function(req,res){
                   Song.addSong(song,function(err,callback){
                     if(err)
                     {
-                      res.render('Error/somethingwrong',{error:err});
+                      res.render('error/somethingwrong',{error:err});
                     }
                   });
                 }
                 Album.updateAlbum(created._id,created,function(err,albumAdded){
                   if(err)
                   {
-                    res.render('Error/somethingwrong',{error:err});
+                    res.render('error/somethingwrong',{error:err});
                   }
                   else{
                     Artist.updateArtistByName(req.body.name,albumAdded,function(err,artistAdded){
                       if(err)
                       {
-                        res.render('Error/somethingwrong',{error:err});
+                        res.render('error/somethingwrong',{error:err});
                       }
                       else{
                         res.redirect('/artists/'+artistAdded.name);
@@ -288,13 +288,13 @@ router.post('/edit/images',function(req,res){
   {
     console.log(req.body.id);
     if(err)
-      res.render('Error/somethingwrong',{error:err});
+      res.render('error/somethingwrong',{error:err});
       else{
         Album.getAlbumById(req.body.id,function(err,created)
         {
           if(err)
           {
-            res.render('Error/somethingwrong',{error:err});
+            res.render('error/somethingwrong',{error:err});
           }
           else
           {
@@ -319,20 +319,20 @@ router.post('/edit/images',function(req,res){
                   Song.addSong(song,function(err,callback){
                     if(err)
                     {
-                      res.render('Error/somethingwrong',{error:err});
+                      res.render('error/somethingwrong',{error:err});
                     }
                   });
                 }
                 Album.updateAlbum(created._id,created,function(err,albumAdded){
                   if(err)
                   {
-                    res.render('Error/somethingwrong',{error:err});
+                    res.render('error/somethingwrong',{error:err});
                   }
                   else{
                     Artist.updateArtistByName(req.body.name,albumAdded,function(err,artistAdded){
                       if(err)
                       {
-                        res.render('Error/somethingwrong',{error:err});
+                        res.render('error/somethingwrong',{error:err});
                       }
                       else{
                         res.redirect('/artists/'+req.body.name.toLowerCase());
@@ -350,7 +350,7 @@ router.post('/edit/images',function(req,res){
 router.post('/getAlbumInfo',function(req,res){
   Album.getAlbumSongsById(req.body.id,function(err,album){
     if(err){
-      res.render('Error/somethingwrong',{error:err});
+      res.render('error/somethingwrong',{error:err});
     }
     else{
       res.send({album:album});
