@@ -25,7 +25,7 @@ var fileUploadController = require('./routes/fileUploadController.js');
 var checkoutController = require('./routes/checkoutController.js');
 
 
-mongoose.connect('mongodb://localhost/musicstore');
+mongoose.connect('mongodb://heroku_r92vh9sw:nhtf7uq729n9iqqbe78kgeuool@ds015995.mlab.com:15995/heroku_r92vh9sw');
 var db = mongoose.connection;
 var app = express();
 
