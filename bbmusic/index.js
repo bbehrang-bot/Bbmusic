@@ -35,7 +35,7 @@ app.set('port', (process.env.PORT || 5000));
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
 console.log("here");
-console.log('__dirname + '/views');
+console.log(__dirname + '/views');
 
 
 
