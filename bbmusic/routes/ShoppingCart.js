@@ -10,7 +10,7 @@ router.get('/add/:id',function(req,res){
   Song.getSongById(id,function(err,song){
     if(err)
     {
-      res.render('Error/somethingwrong',{error:err});
+      res.render('error/somethingwrong',{error:err});
     }
     else{
       cart.add(song,song.id);
@@ -30,7 +30,7 @@ router.get('/remove/:id',function(req,res){
   Song.getSongById(id,function(err,song){
     if(err)
     {
-      res.render('Error/somethingwrong',{error:err});
+      res.render('error/somethingwrong',{error:err});
     }
     else{
       cart.remove(song,song.id);

@@ -7,7 +7,7 @@ var Order = require('../models/orders.js');
 router.get('/',ensureAuthenticated,function(req,res){
   if(!req.session.cart || req.session.cart.totalPrice == 0)
   {
-    res.render('Error/somethingwrong',{error:"Your cart is empty"});
+    res.render('error/somethingwrong',{error:"Your cart is empty"});
   }
   else{
     var cart = new Cart(req.session.cart);
@@ -18,7 +18,7 @@ router.get('/',ensureAuthenticated,function(req,res){
 router.post('/',ensureAuthenticated,function(req,res){
   if(!req.session.cart || req.session.cart.totalPrice == 0)
   {
-    res.render('Error/somethingwrong',{error:"Your cart is empty"});
+    res.render('error/somethingwrong',{error:"Your cart is empty"});
   }
   else{
     var cart = new Cart(req.session.cart);
@@ -34,7 +34,7 @@ router.post('/',ensureAuthenticated,function(req,res){
     }, function(err, charge) {
       if(err)
       {
-        res.render('Error/somethingwrong',{error:err});
+        res.render('error/somethingwrong',{error:err});
       }
 
       else{
@@ -47,7 +47,7 @@ router.post('/',ensureAuthenticated,function(req,res){
         Order.saveOrder(order,function(err,callback){
           if(err)
           {
-              res.render('Error/somethingwrong',{error:"Payment was made but there was a problem saving the order, please contact the administrator with your info in order to recieve your products."});
+              res.render('error/somethingwrong',{error:"Payment was made but there was a problem saving the order, please contact the administrator with your info in order to recieve your products."});
           }
           else
           {

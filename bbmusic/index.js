@@ -1,6 +1,6 @@
+var express = require('express');
 var cookiePaser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var express = require('express');
 var path = require('path');
 var mongoose = require('mongoose');
 var expressValidator = require('express-validator');
@@ -13,7 +13,7 @@ var LocalStrategy = require('passport-local').Strategy;
 var csrf = require('csurf');
 var route = express.Router();
 var csrfProtection = csrf({cookie:true});
-var indexController = require('./routes/Home/indexController.js');
+var indexController = require('./routes/indexController.js');
 var songController = require('./routes/songController.js');
 var cartController = require('./routes/ShoppingCart.js');
 var albumController = require('./routes/albumController.js');
@@ -29,10 +29,13 @@ mongoose.connect('mongodb://heroku_r92vh9sw:nhtf7uq729n9iqqbe78kgeuool@ds015995.
 var db = mongoose.connection;
 var app = express();
 
-// view engine setup
 app.set('port', (process.env.PORT || 5000));
+
+// view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
+
+
 
 //bodyParser middleware
 app.use(bodyParser.json());
