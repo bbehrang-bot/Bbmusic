@@ -29,11 +29,14 @@ mongoose.connect('mongodb://heroku_r92vh9sw:nhtf7uq729n9iqqbe78kgeuool@ds015995.
 var db = mongoose.connection;
 var app = express();
 
+app.set('port', (process.env.PORT || 5000));
+
 // view engine setup
 app.engine('ejs', engine);
-app.set('port', (process.env.PORT || 5000));
-app.set('views', path.join(__dirname, 'views'));
+app.set('views', path.join(__dirname, '/views'));
 app.set('view engine', 'ejs');
+
+
 
 //bodyParser middleware
 app.use(bodyParser.json());
