@@ -87,18 +87,11 @@
               $(".contentInner").append('<div class="basket_items"><div class="basket_item_name" data-id="'+response.cart[i].item._id+'">'+i+'. '+response.cart[i].item.name+'</div><div class="price">'+response.cart[i].price+' $</div><div class="basket_item_delete icon-multiply"></div></div>');
             }
             var p = 0;
-            console.log(response.total);
-            console.log(typeof(response.total));
-            if(typeof(response.total != 'undefined'))
+            if(typeof(response.total) != 'undefined')
             {
-              if(!response.total)
-              {
                 p = response.total;
-              }
             }
-            if(p=='undefined'){
-              p = 0;
-            }
+
             $(".contentInner").append('<div class="basket_total">'+p+' $</div>')
             $(".contentInner").append('<div class="basket_checkOut"><a class="icon-credit" href="/checkout" title="check out"</div>');
 
