@@ -88,12 +88,16 @@
             }
             var p = 0;
             console.log(response.total);
+            console.log(typeof(response.total));
             if(typeof(response.total != 'undefined'))
             {
               if(!response.total)
               {
                 p = response.total;
               }
+            }
+            if(p=='undefined'){
+              p = 0;
             }
             $(".contentInner").append('<div class="basket_total">'+p+' $</div>')
             $(".contentInner").append('<div class="basket_checkOut"><a class="icon-credit" href="/checkout" title="check out"</div>');
