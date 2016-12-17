@@ -25,7 +25,7 @@
               <a class="icon-eye" href="#" title="Menu"></a>
             </div>
             <div class="details_boxes detials_info"><a href="#" title="Info">info</a></div>
-            <div class="details_boxes detials_events"><a href="#" title="events">events</a></div>
+            <div class="details_boxes detials_events"><a href="#" title="events">gallary</a></div>
             <div class="details_boxes detials_albums"><a href="#" title="albums">albums</a></div>
             <div class="details_boxes detials_songs"><a href="#" title="songs">songs</a></div>
           </div>
@@ -70,6 +70,7 @@
        $(".artist_detail_albums").css({"opacity":"0","margin-top":"-15%"});
        $(".artist_detail_songs").css({"opacity":"0","margin-right":"-15%"});
        $(".details_boxes").css({"display":"block"});
+       $(".bgOverlay").css("background","rgba(0,0,0,0.5)");
        setTimeout(function(){
          $(".artist_detail_info").css({"display":"none"});
          $(".artist_detail_albums").css({"display":"none"});
@@ -263,7 +264,9 @@
 
         }
     });
-
+    $("detials_events").on("click",function(e){
+      $(".bgOverlay").css("background","rgba(0,0,0,0)");
+    });
 
 
   });
