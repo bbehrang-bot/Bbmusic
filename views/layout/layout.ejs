@@ -86,7 +86,11 @@
             {
               $(".contentInner").append('<div class="basket_items"><div class="basket_item_name" data-id="'+response.cart[i].item._id+'">'+i+'. '+response.cart[i].item.name+'</div><div class="price">'+response.cart[i].price+' $</div><div class="basket_item_delete icon-multiply"></div></div>');
             }
-            $(".contentInner").append('<div class="basket_total">'+response.total+' $</div>')
+            var p = 0;
+            if(typeof(response.total != 'undefined'){
+              p = response.total;
+            });
+            $(".contentInner").append('<div class="basket_total">'+p+' $</div>')
             $(".contentInner").append('<div class="basket_checkOut"><a class="icon-credit" href="/checkout" title="check out"</div>');
 
 
