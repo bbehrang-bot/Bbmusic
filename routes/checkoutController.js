@@ -11,7 +11,7 @@ router.get('/',ensureAuthenticated,function(req,res){
   }
   else{
     var cart = new Cart(req.session.cart);
-    res.render('checkout/checkout',{total:cart.totalPrice});
+    res.render('checkout/checkout',{total:cart.totalPrice || 0});
   }
 
 });
