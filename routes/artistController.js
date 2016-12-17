@@ -48,13 +48,13 @@ router.get('/api',function(req,res){
     });
 
 });
-router.get('/add',function(req,res){
+router.get('/add',ensureAuthenticated,function(req,res){
     res.render("artist/add")
 });
-router.get('/edit',function(req,res){
+router.get('/edit',ensureAuthenticated,function(req,res){
     res.render("artist/edit");
 });
-router.post('/edit',function(req,res){
+router.post('/edit',ensureAuthenticated,function(req,res){
     var artistName = req.body.name.toLowerCase();
     Artist.getArtistByName(artistName,function(err,artist){
       if(err)
@@ -94,7 +94,7 @@ router.post('/edit',function(req,res){
       }
     });
 });
-router.post('/edit/images',function(req,res){
+router.post('/edit/images',ensureAuthenticated,function(req,res){
   var upload = multer({
     limits:{fileSize:52428800},
     storage: multerS3({
@@ -156,7 +156,7 @@ router.post('/edit/images',function(req,res){
       }
   });
 });
-router.post('/add/newArtist',function(req,res){
+router.post('/add/newArtist',ensureAuthenticated,function(req,res){
   Artist.getArtistLastPriority(function(err,lastprio){
     if(err)
     {
@@ -184,7 +184,7 @@ router.post('/add/newArtist',function(req,res){
   });
 
 });
-router.post('/add/aristName',function(req,res){
+router.post('/add/aristName',ensureAuthenticated,function(req,res){
   Artist.getArtistByName(req.body.name,function(err,callback){
     if(err)
     {
@@ -250,7 +250,7 @@ router.get('/:name',function(req,res){
   });
 
 });
-router.post('/add',function(req,res){
+router.post('/add',ensureAuthenticated,function(req,res){
   var storage = multer.diskStorage({
     destination: function (req, file, cb) {
       //cb(null, 'artistsMedia/drake/songs')
@@ -310,7 +310,7 @@ router.post('/add',function(req,res){
       }
   });
 });
-router.post('/add/images',function(req,res){
+router.post('/add/images',ensureAuthenticated,function(req,res){
   var storage = multer.diskStorage({
     destination: function (req, file, cb) {
       //cb(null, 'artistsMedia/drake/songs')
@@ -339,8 +339,6 @@ router.post('/add/images',function(req,res){
     if(err)
       res.render('error/somethingwrong',{error:err});
       else{
-        console.log('here');
-        console.log(req.body.name);
         Artist.getArtistByName(req.body.name,function(err,artistByName){
           if(err)
           {
@@ -369,3 +367,13 @@ router.post('/add/images',function(req,res){
   });
 });
 module.exports = router;
+function ensureAuthenticated(req, res, next){
+	if(req.isAuthenticated())
+  {
+    if(req.user.type == "admin")
+    {
+      return next();
+    }
+	}
+		res.redirect('/users/login');
+}

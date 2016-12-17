@@ -5,21 +5,9 @@ var songsSchema = mongoose.Schema({
     required:true,
     default : null
   },
-  listened:{
-    type:Number,
-    default:0
-  },
   price:{
     type:Number,
-    default :0
-  },
-  trackNumber:{
-    type:Number,
-    default : 1
-  },
-  lyrics:{
-    type:String,
-    default : null
+    default :1
   },
   songPath:{
     type:String,
@@ -30,7 +18,7 @@ var songsSchema = mongoose.Schema({
     required:true
   },
   album:{
-    type:[{type:mongoose.Schema.Types.ObjectId,ref :'Album'}]
+    type:mongoose.Schema.Types.ObjectId
   }
 });
 var Song = module.export = mongoose.model('Song',songsSchema);

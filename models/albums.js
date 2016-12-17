@@ -74,6 +74,10 @@ module.exports.getAllAlbumsSongsByName = function(artistName,albumName,callback,
 module.exports.updateAlbumByArtist = function(artistName,newArtistName,callback){
   Album.update({artist:artistName},{"$set":{artist:newArtistName}},{multi:true},callback);
 }
+module.exports.removeSongFromAlbum = function(id,callback)
+{
+  Album.update({},{"$pull":{songs:id}},{multi:true},callback);
+}
 module.exports.updateAlbum = function(id,album,callback){
   var query = {_id :id };
   var options= {};

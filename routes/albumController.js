@@ -39,11 +39,11 @@ router.get('/',function(req,res)
     res.json(callback);
   });
 });
-router.get('/add',function(req,res)
+router.get('/add',ensureAuthenticated,function(req,res)
 {
   res.render("album/add/albumadd");
 });
-router.post('/add/submit',function(req,res){
+router.post('/add/submit',ensureAuthenticated,function(req,res){
   Artist.getArtistsFullInfoByName(req.body.name,function(err,artist){
     if(err)
     {
@@ -55,10 +55,10 @@ router.post('/add/submit',function(req,res){
     }
   });
 });
-router.get('/edit',function(req,res){
-  res.render('album/adit');
+router.get('/edit',ensureAuthenticated,function(req,res){
+  res.render('album/edit');
 });
-router.post('/edit',function(req,res){
+router.post('/edit',ensureAuthenticated,function(req,res){
   Album.getAlbumById(req.body.id,function(err,album){
     if(err)
     {
@@ -84,7 +84,7 @@ router.post('/edit',function(req,res){
     }
   });
 });
-router.post('/add',function(req,res){
+router.post('/add',ensureAuthenticated,function(req,res){
   var storage = multer.diskStorage({
     destination: function (req, file, cb) {
       //cb(null, 'artistsMedia/drake/songs')
@@ -155,7 +155,7 @@ router.post('/add',function(req,res){
       }
   });
 });
-router.post('/add/newAlbum',function(req,res){
+router.post('/add/newAlbum',ensureAuthenticated,function(req,res){
   var album = new AlbumModel({
     name : req.body.albumName.toLowerCase(),
     description:req.body.description,
@@ -173,7 +173,7 @@ router.post('/add/newAlbum',function(req,res){
   });
 
 });
-router.post('/add/artist',function(req,res)
+router.post('/add/artist',ensureAuthenticated,function(req,res)
 {
   var name = req.body.name;
   Artist.searchArtistsByName(name,function(err,artists){
@@ -186,7 +186,7 @@ router.post('/add/artist',function(req,res)
     }
   });
 });
-router.post('/getAlbum',function(req,res){
+router.post('/getAlbum',ensureAuthenticated,function(req,res){
   Album.getAlbumById(req.body.name,function(err,album){
     if(err)
     {
@@ -197,7 +197,7 @@ router.post('/getAlbum',function(req,res){
       }
   });
 });
-router.post('/edit/addImages',function(req,res){
+router.post('/edit/addImages',ensureAuthenticated,function(req,res){
   var storage = multer.diskStorage({
     destination: function (req, file, cb) {
       //cb(null, 'artistsMedia/drake/songs')
@@ -228,6 +228,8 @@ router.post('/edit/addImages',function(req,res){
       else{
         Album.getAlbumById(req.body.id,function(err,created)
         {
+          console.log("HERERE");
+          console.log(created);
           if(err)
           {
             res.render('error/somethingwrong',{error:err});
@@ -242,6 +244,7 @@ router.post('/edit/addImages',function(req,res){
               }
               if(!isEmpty(req.files['songs']))
               {
+                console.log(created._id);
                 for(var i=0;i<req.files['songs'].length;i++)
                 {
                   var song = new SongModel({
@@ -251,6 +254,8 @@ router.post('/edit/addImages',function(req,res){
                     songPath : 'https://s3-eu-west-1.amazonaws.com/bbmusicstore2/'+req.files['songs'][i].key
                   });
                   created.songs.push(song);
+                  console.log("sdadasdsa");
+                  console.log(song);
                   Song.addSong(song,function(err,callback){
                     if(err)
                     {
@@ -282,7 +287,7 @@ router.post('/edit/addImages',function(req,res){
       }
     });
 });
-router.post('/edit/images',function(req,res){
+router.post('/edit/images',ensureAuthenticated,function(req,res){
   var storage = multer.diskStorage({
     destination: function (req, file, cb) {
       //cb(null, 'artistsMedia/drake/songs')
@@ -299,7 +304,6 @@ router.post('/edit/images',function(req,res){
   }).fields([{name:'coverArt',maxCount:1},{name:'songs',maxCount:20}]);
   upload(req,res,function(err)
   {
-    console.log(req.body.id);
     if(err)
       res.render('error/somethingwrong',{error:err});
       else{
@@ -311,7 +315,6 @@ router.post('/edit/images',function(req,res){
           }
           else
           {
-            console.log(created);
             if(!isEmpty(req.files))
             {
               if(!isEmpty(req.files['coverArt']))
@@ -360,7 +363,7 @@ router.post('/edit/images',function(req,res){
       }
     });
 });
-router.post('/getAlbumInfo',function(req,res){
+router.post('/getAlbumInfo',ensureAuthenticated,function(req,res){
   Album.getAlbumSongsById(req.body.id,function(err,album){
     if(err){
       res.render('error/somethingwrong',{error:err});
@@ -371,3 +374,13 @@ router.post('/getAlbumInfo',function(req,res){
   })
 });
 module.exports = router;
+function ensureAuthenticated(req, res, next){
+	if(req.isAuthenticated())
+  {
+    if(req.user.type == "admin")
+    {
+      return next();
+    }
+	}
+		res.redirect('/users/login');
+}

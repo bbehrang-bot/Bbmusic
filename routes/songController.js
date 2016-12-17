@@ -87,7 +87,7 @@ router.get('/api/:id',function(req,res)
     res.json(callback);
   });
 });
-router.post('/submit',function(req,res)
+router.post('/submit',ensureAuthenticated,function(req,res)
 {
   var storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -160,10 +160,10 @@ router.delete('/api/:id',function(req,res)
 
   });
 });
-router.get('/edit',function(req,res){
+router.get('/edit',ensureAuthenticated,function(req,res){
   res.render('song/edit');
 });
-router.post('/save',function(req,res){
+router.post('/save',ensureAuthenticated,function(req,res){
   console.log('s');
   var song = {
     name : req.body.name,
@@ -188,23 +188,37 @@ router.post('/save',function(req,res){
     }
   });
 });
-router.post('/delete',function(req,res){
+router.post('/delete',ensureAuthenticated,function(req,res){
   Song.deleteSong(req.body.id,function(err,callback){
     if(err)
     {
       res.render('error/somethingwrong',{error:err});
     }
     else{
-      res.send({id:req.body.id});
-
+      Album.removeSongFromAlbum(req.body.id,function(err,album)
+      {
+        if(err)
+        {
+          res.render('error/somethingwrong',{error:err});
+        }
+        else{
+          console.log(album);
+          res.send({id:req.body.id});
+        }
+      });
     }
   });
 
 });
 module.exports = router;
 function ensureAuthenticated(req, res, next){
-	if(req.isAuthenticated(),req.user.type=="admin"){
-		return next();
+	if(req.isAuthenticated()){
+    {
+      if(req.user.type=="admin")
+      {
+        return next();
+      }
+    }
 	} else {
 		req.flash('error_msg','You are not logged in');
 		res.redirect('/users/login');

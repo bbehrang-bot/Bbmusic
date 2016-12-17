@@ -82,7 +82,7 @@ module.exports.addArtist = function(artist,callback){
 module.exports.updateArtistByName = function(name,album,callback){
     var query = {name :name};
     var options= {};
-    Artist.findOneAndUpdate(query,{'$push':{albums:album}},callback);
+    Artist.findOneAndUpdate(query,{'$addToSet':{albums:album}},callback);
 }
 module.exports.updateOrInsertArtist = function(id,artist,callback){
   var query = {_id :id };
