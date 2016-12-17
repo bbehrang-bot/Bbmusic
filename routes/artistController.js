@@ -49,10 +49,10 @@ router.get('/api',function(req,res){
 
 });
 router.get('/add',function(req,res){
-    res.render("Artist/Add")
+    res.render("artist/add")
 });
 router.get('/edit',function(req,res){
-    res.render("Artist/Edit");
+    res.render("artist/edit");
 });
 router.post('/edit',function(req,res){
     var artistName = req.body.name.toLowerCase();
@@ -244,7 +244,7 @@ router.get('/:name',function(req,res){
         res.render('error/somethingwrong',{error:"Artist not found."});
       }
       else{
-        res.render('Artist/Details',{artist:artist});
+        res.render('artist/details',{artist:artist});
       }
     }
   });
