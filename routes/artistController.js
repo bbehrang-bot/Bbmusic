@@ -163,7 +163,7 @@ router.post('/add/newArtist',ensureAuthenticated,function(req,res){
     res.render('error/somethingwrong',{error:err});
     }
     else{
-      var lastPr = lastprio[0].priority;
+      var lastPr = lastprio[0].priority || 99;
       lastPr++;
       var artist = new ArtistModel({
         name : req.body.name.toLowerCase(),
