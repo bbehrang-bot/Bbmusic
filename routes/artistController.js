@@ -7,6 +7,18 @@ Artist = require('../models/artists.js');
 var ArtistModel = mongoose.model("Artist");
 var multer = require('multer');
 var mkdirp = require('mkdirp');
+var aws = require('aws-sdk');
+var multerS3 = require('multer-s3');
+var S3FS = require('s3fs');
+//var fsImpl = new S3FS('bbmusicstore2', options);
+//fsImpl.writeFile('message.txt', 'Hello Node', function (err) {
+  //if (err) throw err;
+  //console.log('It\'s saved!');
+//});
+aws.config.loadFromPath('./config/config.json');
+var s3 = new aws.S3({
+  params:{Bucket:'bbmusicstore2'}});
+
 function isEmpty(obj) {
     // null and undefined are "empty"
     if (obj == null) return true;
@@ -83,21 +95,18 @@ router.post('/edit',function(req,res){
     });
 });
 router.post('/edit/images',function(req,res){
-  var storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-      //cb(null, 'artistsMedia/drake/songs')
-      var dir = 'artistsMedia/' + req.body.id+ '/images';
-      mkdirp(dir,err => cb(err,dir))
-    },
-    filename: function (req, file, cb) {
-      cb(null, req.body.id + encodeURI(req.body.name.toLowerCase()) + encodeURI(file.fieldname.toLowerCase()) +'-'+ Date.now() + path.extname(file.originalname)) //Appending extension
-    },
-
-  });
   var upload = multer({
-    storage: storage,
-    limits :{fileSize :52428800}
-  }).fields([{name:'Logo',maxCount:1},{name:'artistHome',maxCount:1},{name:'otherImgs',maxCount:10}]);
+    limits:{fileSize:52428800},
+    storage: multerS3({
+    s3:s3,bucket:'bbmusicstore2',
+    acl:'public-read',
+    metadata: function (req, file, cb) {
+      cb(null, {fieldName: file.fieldname});
+    },
+    key: function (req, file, cb) {
+      cb(null,req.body.id+'/images/'+ Date.now().toString()+file.fieldname + path.extname(file.originalname))
+  },
+})}).fields([{name:'Logo',maxCount:1},{name:'artistHome',maxCount:1},{name:'otherImgs',maxCount:10}]);
   upload(req,res,function(err)
   {
     if(err)
@@ -114,17 +123,17 @@ router.post('/edit/images',function(req,res){
             {
               if(!isEmpty(req.files['artistHome']))
               {
-                artistByName.images.artistPage='/' +req.files['artistHome'][0].destination + '/'+req.files['artistHome'][0].filename;
+                artistByName.images.artistPage='https://s3-eu-west-1.amazonaws.com/bbmusicstore2/' +req.files['artistHome'][0].key;
               }
               if(!isEmpty((req.files['Logo'])))
               {
-                artistByName.images.logo= '/' +req.files['Logo'][0].destination + '/'+req.files['Logo'][0].filename;
+                artistByName.images.logo= 'https://s3-eu-west-1.amazonaws.com/bbmusicstore2/' +req.files['Logo'][0].key;
               }
               if(!isEmpty(req.files['otherImgs']))
               {
                 for(var i=0;i<req.files['otherImgs'].length;i++)
                 {
-                    artistByName.images.otherImgs.push('/' + req.files['otherImgs'][i].destination + '/'+req.files['otherImgs'][i].filename)
+                  artistByName.images.otherImgs.push('https://s3-eu-west-1.amazonaws.com/bbmusicstore2/' + req.files['otherImgs'][i].key)
                 }
               }
               Artist.updateOrInsertArtist(artistByName._id,artistByName,function(err,callback){
@@ -314,9 +323,17 @@ router.post('/add/images',function(req,res){
 
   });
   var upload = multer({
-    storage: storage,
-    limits :{fileSize :52428800}
-  }).fields([{name:'Logo',maxCount:1},{name:'artistHome',maxCount:1},{name:'otherImgs',maxCount:10}]);
+    limits:{fileSize:52428800},
+    storage: multerS3({
+    s3:s3,bucket:'bbmusicstore2',
+    acl:'public-read',
+    metadata: function (req, file, cb) {
+      cb(null, {fieldName: file.fieldname});
+    },
+    key: function (req, file, cb) {
+      cb(null,req.body.id+'/images/'+ Date.now().toString()+file.fieldname + path.extname(file.originalname))
+  },
+})}).fields([{name:'Logo',maxCount:1},{name:'artistHome',maxCount:1},{name:'otherImgs',maxCount:10}]);
   upload(req,res,function(err)
   {
     if(err)
@@ -330,11 +347,11 @@ router.post('/add/images',function(req,res){
             res.render('error/somethingwrong',{error:err});
           }
           else{
-            artistByName.images.artistPage='/' +req.files['artistHome'][0].destination + '/'+req.files['artistHome'][0].filename;
-            artistByName.images.logo= '/' +req.files['Logo'][0].destination + '/'+req.files['Logo'][0].filename;
+            artistByName.images.artistPage='https://s3-eu-west-1.amazonaws.com/bbmusicstore2/' +req.files['artistHome'][0].key;
+            artistByName.images.logo= 'https://s3-eu-west-1.amazonaws.com/bbmusicstore2/' +req.files['Logo'][0].key;
             for(var i=0;i<req.files['otherImgs'].length;i++)
             {
-              artistByName.images.otherImgs.push('/' + req.files['otherImgs'][i].destination + '/'+req.files['otherImgs'][i].filename)
+              artistByName.images.otherImgs.push('https://s3-eu-west-1.amazonaws.com/bbmusicstore2/' + req.files['otherImgs'][i].key)
             }
             Artist.updateOrInsertArtist(artistByName._id,artistByName,function(err,callback){
               if(err)

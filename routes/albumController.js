@@ -10,6 +10,11 @@ Song = require('../models/songs');
 var SongModel = mongoose.model("Song");
 var multer = require('multer');
 var mkdirp = require('mkdirp');
+var aws = require('aws-sdk');
+var multerS3 = require('multer-s3');
+aws.config.loadFromPath('./config/config.json');
+var s3 = new aws.S3({
+  params:{Bucket:'bbmusicstore2'}});
 function isEmpty(obj) {
     // null and undefined are "empty"
     if (obj == null) return true;
@@ -205,8 +210,17 @@ router.post('/edit/addImages',function(req,res){
 
   });
   var upload = multer({
-    storage: storage,
-  }).fields([{name:'coverArt',maxCount:1},{name:'songs',maxCount:20}]);
+    limits:{fileSize:52428800},
+    storage: multerS3({
+    s3:s3,bucket:'bbmusicstore2',
+    acl:'public-read',
+    metadata: function (req, file, cb) {
+      cb(null, {fieldName: file.fieldname});
+    },
+    key: function (req, file, cb) {
+      cb(null,req.body.artistId+'/albums/'+req.body.id+'/'+ Date.now().toString()+file.fieldname + path.extname(file.originalname))
+  },
+})}).fields([{name:'coverArt',maxCount:1},{name:'songs',maxCount:20}]);
   upload(req,res,function(err)
   {
     if(err)
@@ -224,18 +238,17 @@ router.post('/edit/addImages',function(req,res){
             {
               if(!isEmpty(req.files['coverArt']))
               {
-                created.coverArt = '/' +req.files['coverArt'][0].destination + '/' + req.files['coverArt'][0].filename;
+                created.coverArt = 'https://s3-eu-west-1.amazonaws.com/bbmusicstore2/' +req.files['coverArt'][0].key;
               }
               if(!isEmpty(req.files['songs']))
               {
-                console.log(created);
                 for(var i=0;i<req.files['songs'].length;i++)
                 {
                   var song = new SongModel({
                     name : req.files['songs'][i].originalname,
                     album : created._id,
                     artist:req.body.name.toLowerCase(),
-                    songPath : '/' +req.files['songs'][i].destination + '/'+req.files['songs'][i].filename
+                    songPath : 'https://s3-eu-west-1.amazonaws.com/bbmusicstore2/'+req.files['songs'][i].key
                   });
                   created.songs.push(song);
                   Song.addSong(song,function(err,callback){
